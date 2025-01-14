@@ -11,6 +11,8 @@ class FeedbackItem {
 }
 
 class FeedbackListScreen extends StatefulWidget {
+  const FeedbackListScreen({super.key});
+
   @override
   _FeedbackListScreenState createState() => _FeedbackListScreenState();
 }
@@ -24,7 +26,7 @@ class _FeedbackListScreenState extends State<FeedbackListScreen> {
           feedback: feedback, rating: rating, timestamp: DateTime.now()));
     });
     // Set a timer to remove the feedback after 20 seconds
-    Timer(Duration(seconds: 20), () {
+    Timer(const Duration(seconds: 20), () {
       setState(() {
         feedbackList.removeWhere(
             (item) => DateTime.now().difference(item.timestamp).inSeconds > 10);
@@ -64,10 +66,10 @@ class _FeedbackListScreenState extends State<FeedbackListScreen> {
       appBar: AppBar(
         backgroundColor: const Color(0xdf350d94),
         foregroundColor: const Color.fromARGB(255, 255, 255, 255),
-        title: Text('Feedback & Ratings'),
+        title: const Text('Feedback & Ratings'),
       ),
       body: feedbackList.isEmpty
-          ? Center(
+          ? const Center(
               child: Text('Add your feedback'),
             )
           : ListView.builder(
@@ -81,11 +83,11 @@ class _FeedbackListScreenState extends State<FeedbackListScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.edit),
+                        icon: const Icon(Icons.edit),
                         onPressed: () => _editFeedback(index),
                       ),
                       IconButton(
-                        icon: Icon(Icons.delete),
+                        icon: const Icon(Icons.delete),
                         onPressed: () => _deleteFeedback(index),
                       ),
                     ],
@@ -107,7 +109,7 @@ class _FeedbackListScreenState extends State<FeedbackListScreen> {
             ),
           );
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -118,8 +120,9 @@ class FeedbackFormScreen extends StatefulWidget {
   final int initialRating;
   final Function(String, int) onFeedbackSubmitted;
 
-  FeedbackFormScreen(
-      {required this.initialFeedback,
+  const FeedbackFormScreen(
+      {super.key,
+      required this.initialFeedback,
       required this.initialRating,
       required this.onFeedbackSubmitted});
 
@@ -149,10 +152,10 @@ class _FeedbackFormScreenState extends State<FeedbackFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Submit Feedback'),
+        title: const Text('Submit Feedback'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
@@ -160,7 +163,7 @@ class _FeedbackFormScreenState extends State<FeedbackFormScreen> {
             children: [
               TextFormField(
                 controller: _feedbackController,
-                decoration: InputDecoration(labelText: 'Feedback'),
+                decoration: const InputDecoration(labelText: 'Feedback'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your feedback';
@@ -168,7 +171,7 @@ class _FeedbackFormScreenState extends State<FeedbackFormScreen> {
                   return null;
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text('Rating: $_rating'),
               Slider(
                 value: _rating.toDouble(),
@@ -181,7 +184,7 @@ class _FeedbackFormScreenState extends State<FeedbackFormScreen> {
                   });
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
@@ -192,7 +195,7 @@ class _FeedbackFormScreenState extends State<FeedbackFormScreen> {
                     Navigator.pop(context);
                   }
                 },
-                child: Text('Submit'),
+                child: const Text('Submit'),
               ),
             ],
           ),
@@ -203,7 +206,7 @@ class _FeedbackFormScreenState extends State<FeedbackFormScreen> {
 }
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: FeedbackListScreen(),
   ));
 }

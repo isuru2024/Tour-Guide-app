@@ -9,6 +9,8 @@ import 'models/image_data.dart';
 import 'screens/PackageScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'providers/favorite_provider.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -90,7 +92,15 @@ void main() async {
           'Whale Watching: Mirissa is one of the best places in the world to go whale watching, particularly for blue whales and sperm whales. Tours operate from November to April, offering unforgettable close-up encounters with these magnificent creatures.\n\n Mirissa Beach: A beautiful crescent-shaped beach with calm waters, perfect for swimming, sunbathing, and relaxing by the sea. The beach also offers great opportunities for water sports, such as snorkeling and surfing.\n\n Secret Beach: A secluded, tranquil beach located a short walk from Mirissa Beach, ideal for those seeking privacy and a peaceful escape.\n\n Parrot Rock: A small rock formation located at the far end of Mirissa Beach, accessible by a short walk and offering stunning panoramic views of the coastline. It’s a great spot for photos and sunset views.\n\n Coconut Tree Hill: A scenic spot with rows of tall coconut trees overlooking the Indian Ocean. It’s a popular location for photography, especially during sunset.\n\n Galle Fort: A short drive from Mirissa, this UNESCO World Heritage Site is home to colonial-era architecture, cobbled streets, and historical landmarks. It’s perfect for a day trip to explore museums, art galleries, and charming cafes.\n\n Turtle Conservation Project: Visit the nearby turtle hatcheries in the region to learn about the conservation efforts for endangered sea turtles and see baby turtles being released into the ocean.\n\n Dondra Head Lighthouse: Situated at the southernmost point of Sri Lanka, this lighthouse offers breathtaking views of the ocean and surrounding areas. It’s a great spot for a scenic drive and photographs.\n\n Weligama Beach: Located just a few kilometers from Mirissa, Weligama is known for its large sandy beach and perfect beginner-friendly surf spots. It’s also a great place to relax or take a boat tour to see stilt fishermen in action.\n\n Weherahena Temple: A Buddhist temple located just outside Mirissa, known for its large statue of Buddha and peaceful surroundings, offering a glimpse into the spiritual heritage of the area.\n\n  Snorkeling and Diving: Explore the underwater beauty of the region through snorkeling and diving trips that offer a chance to see colorful coral reefs, tropical fish, and even shipwrecks.\n\n Mirissa Harbor: Visit the small harbor for a glimpse of the local fishing industry, or take a boat ride for a peaceful journey along the coast.\n\n Fishing and Boat Tours: Take a traditional fishing boat ride or go on a sunset cruise for a relaxing way to enjoy the stunning views of Mirissa’s coastline.\n\n Mirissa Nightlife: Enjoy the relaxed, beachside nightlife with beach bars, live music, and seafood restaurants. It’s a perfect way to unwind after a day of activities.\n\n Ayurvedic Spa Treatments: Mirissa offers several wellness retreats and spas that specialize in Ayurvedic treatments, perfect for relaxation and rejuvenation.',
       mapImagePath: 'image/mirissa_map.jpg'));
 
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+            create: (_) => FavoriteProvider()..fetchFavorites()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -100,6 +110,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Image Details',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -231,7 +242,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          FeedbackListScreen()), // Navigate to Rating screen
+                          const FeedbackListScreen()), // Navigate to Rating screen
                 );
               },
             ),

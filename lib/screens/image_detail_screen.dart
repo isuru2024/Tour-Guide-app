@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/favorite_provider.dart';
 import '../models/image_data.dart';
-import '../services/sqflite_service.dart';
 
 class ImageDetailScreen extends StatelessWidget {
   final ImageData imageData;
@@ -8,18 +9,14 @@ class ImageDetailScreen extends StatelessWidget {
   const ImageDetailScreen({Key? key, required this.imageData})
       : super(key: key);
 
-  void _toggleFavorite(BuildContext context) async {
-    // Add the image data to favorites
-    await SqfliteService.addFavorite(imageData);
-
-    // Update the UI by rebuilding the widget
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Added to favorites'),
-    ));
-  }
-
   @override
   Widget build(BuildContext context) {
+    final favoriteProvider = Provider.of<FavoriteProvider>(context);
+
+    // Check if the item is already in favorites
+    final isFavorite =
+        favoriteProvider.favorites.any((item) => item.path == imageData.path);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(223, 6, 0, 60),
@@ -33,9 +30,25 @@ class ImageDetailScreen extends StatelessWidget {
               ),
             ),
             IconButton(
-              onPressed: () => _toggleFavorite(context),
-              icon: const Icon(Icons.favorite_border),
-              tooltip: 'Add to Favorites',
+              onPressed: () async {
+                if (isFavorite) {
+                  await favoriteProvider.removeFavorite(imageData);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Removed from favorites')),
+                  );
+                } else {
+                  await favoriteProvider.addFavorite(imageData);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Added to favorites')),
+                  );
+                }
+              },
+              icon: Icon(
+                isFavorite ? Icons.favorite : Icons.favorite_border,
+                color: isFavorite ? Colors.red : Colors.white,
+              ),
+              tooltip:
+                  isFavorite ? 'Remove from Favorites' : 'Add to Favorites',
             ),
           ],
         ),

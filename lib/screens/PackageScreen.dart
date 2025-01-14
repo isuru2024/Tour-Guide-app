@@ -56,6 +56,7 @@ class PackageScreen extends StatelessWidget {
                       await Connectivity().checkConnectivity();
                   if (connectivityResult == ConnectivityResult.none) {
                     showDialog(
+                      // ignore: use_build_context_synchronously
                       context: context,
                       builder: (context) => AlertDialog(
                         title: const Text('No Internet Connection'),
@@ -73,6 +74,7 @@ class PackageScreen extends StatelessWidget {
                     );
                   } else {
                     Navigator.push(
+                      // ignore: use_build_context_synchronously
                       context,
                       MaterialPageRoute(
                         builder: (context) => PackageImageDetailScreen(
